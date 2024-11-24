@@ -11,12 +11,19 @@ import rolex from "../assets/rolex.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from "react-redux";
+import { removeProduct } from "../slice/ProductSlice";
+
 
 const Navber = () => {
+  let data = useSelector((state)=> state.product.cartItem)
+  let dispatch = useDispatch()
+  
   let navigate = useNavigate();
   const cateRef = useRef();
   const accRef = useRef();
   const cartRef = useRef();
+  let showcartRef = useRef()
   const [isCateNav, setIsCateNav] = useState(false);
   const [isAcc, setIsAcc] = useState(false);
   const [isCart, setIsCart] = useState(false);
@@ -26,9 +33,14 @@ const Navber = () => {
       if (cateRef.current && !cateRef.current.contains(e.target)) {
         setIsCateNav(false);
       }
+
+      if (showcartRef.current.Container(e.target)){
+        setIsCart(true)
+      }
       if (accRef.current && !accRef.current.contains(e.target)) {
         setIsAcc(false);
       }
+
       if (cartRef.current && !cartRef.current.contains(e.target)) {
         setIsCart(false);
       }
@@ -43,12 +55,14 @@ const Navber = () => {
     toast("Welcome to Checkout Page!");
     setTimeout(() => {
       navigate("/Checkout");
+      setIsCart(false)
     }, 2000);
   };
  let handlecart = () =>{
   toast("Welcome to Checkout Page!");
   setTimeout(() =>{
     navigate("/Cart")
+    setIsCart(false)
   }, 2000)
  };
   return (
@@ -109,35 +123,48 @@ const Navber = () => {
 
               {/* Cart Dropdown */}
               <div ref={cartRef} className="relative cursor-pointer" onClick={() => setIsCart(!isCart)}>
-                <IoCart className="text-[20px]" />
+                {data.length > 0 &&
+                <div className="absolute left-[7px] top-[-15px] h-[20px] w-[20px] bg-yellow-500 rounded-full text-white font-bold text-center leading-[15px] ">
+                  {data.length}
+                </div>
+                  }
+                <IoCart className="text-[30px]" />
               </div>
+              <div className="" ref={showcartRef}>
               {isCart && (
                 <div className="absolute right-0 top-full mt-2 w-full md:w-[360px] bg-[rgba(233,230,230,0.9)] z-10">
-                  <div className="flex bg-white py-4 px-5">
-                    <img className="w-[80px] md:w-[150px]" src={rolex} alt="Luxury Watch" />
+                  {data.map((item, i)=>(
+                  <div className="">
+                  <div className="flex items-center bg-white py-4 px-5">
+                    <img className="w-[80px] md:w-[150px]" src={item.thumbnail} alt="Luxury Watch" />
                     <div className="flex-grow ml-3">
-                      <h3 className="font-DM font-bold text-[14px]">A Luxury Watch</h3>
-                      <h3 className="font-DM font-bold text-[14px]">$780.00</h3>
+                      <h3 className="font-DM font-bold text-[14px]">{item.title}</h3>
+                      <h3 className="font-DM font-bold text-[14px]">${item.price}</h3>
                     </div>
-                    <div className="ms-auto text-[20px]">
+                    <div onClick={()=>dispatch(removeProduct(i))} className="ms-auto text-[20px] cursor-pointer">
                       <RxCross2 />
                     </div>
                   </div>
-                  <div className="bg-white py-4 px-5">
-                    <h5 className="text-[rgba(166,162,162,0.9)]">
-                      Subtotal: <span className="text-black font-bold">$780.00</span>
-                    </h5>
-                    <div className="flex flex-wrap md:flex-nowrap my-5">
-                      <button onClick={handlecart} className="px-[20px] md:px-[40px] py-[12px] md:py-[16px] text-[10px] md:text-[12px] font-bold border-2 border-[#000] me-3 hover:bg-black hover:text-white duration-300">
-                        View Cart
-                      </button>
-                      <button onClick={handleCheck} className="px-[20px] md:px-[40px] py-[12px] md:py-[16px] text-[10px] md:text-[12px] font-bold border-2 border-[#000] me-3 hover:bg-black hover:text-white duration-300">
-                        Check Out
-                      </button>
-                    </div>
+               
+
                   </div>
+
+                  ))}
+                     <div className="bg-white py-4 px-5">
+                   
+                   <div className="flex flex-wrap md:flex-nowrap my-5">
+                     <button onClick={handlecart} className="px-[20px] md:px-[30px] py-[12px] md:py-[10px] text-[10px] md:text-[16px] font-bold border-2 border-[#000] me-3 hover:bg-black hover:text-white duration-300">
+                       View Cart
+                     </button>
+                     <button onClick={handleCheck} className="px-[20px] md:px-[30px] py-[12px] md:py-[10px] text-[10px] md:text-[16px] font-bold border-2 border-[#000] me-3 hover:bg-black hover:text-white duration-300">
+                       Check Out
+                     </button>
+                   </div>
+                 </div>
                 </div>
               )}
+
+              </div>
             </div>
           </div>
         </Flex>

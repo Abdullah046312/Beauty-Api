@@ -9,12 +9,19 @@ import images3 from "../assets/images3.png"
 import { ApiData } from './ContextApi';
 import { FaHeart } from "react-icons/fa6";
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../slice/ProductSlice';
+
 
 
 const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
     let { info, loading } = useContext(ApiData);
     let [filterShow, setFilterShow] = useState([]);
     let [count, setCount] = useState(true);
+    let dispatch = useDispatch()
+
+    
+
 
     useEffect(() => {
         let fiveFilter = categoryFilter.slice(0, 5);
@@ -33,6 +40,10 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
         setCount(true);
     }
 
+    let handleCartProduct = (item) =>{
+      dispatch(addToCart({...item, qun:1}))
+    }
+
 
 
 
@@ -48,13 +59,13 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
               {filterShow.map((item) => (
                 <div className="w-[32%] border-[1px] border-[#dddd] bg-[#f8f9fa] rounded-[8px] shadow-inner ">
                   <div className="">
-                    <div className="relative group overflow-hidden">
+                    <div className="relative group overflow-hidden cursor-pointer">
                       <Link to={`/shop/${item.id}`}>
                         <img className="w-full" src={item.thumbnail} alt="" />
                       </Link>
-                      <ul className='text-end bg-[#ffffffe0] absolute left-0 h-[150px] duration-300 ease-in-out bottom-[-180px] w-full group-hover:bottom-0 p-4'>
-                        <li className="py-2">
-                          Add to Wish List <FaHeart className="inline-block" />
+                      <ul className='text-end cursor-pointer bg-[#ffffffe0] absolute left-0 h-[150px] duration-300 ease-in-out bottom-[-180px] w-full group-hover:bottom-0 p-4'>
+                        <li className="py-2  ">
+                          Add to Wish List <FaHeart className="inline-block cursor-pointer" />
                         </li>
                         <li className="py-2">
                           Compare <IoGitCompare className="inline-block" />
@@ -114,14 +125,14 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
                     <Link to={`/shop/${item.id}`}>
                       <img className="w-full" src={item.thumbnail} alt="" />
                     </Link>
-                    <ul className='text-end bg-[#ffffffe0] absolute left-0 h-[150px] duration-300 ease-in-out bottom-[-180px] w-full group-hover:bottom-0 p-4'>
+                    <ul className='text-end bg-[#ffffffe0] absolute left-0 h-[150px] duration-300 ease-in-out bottom-[-180px] w-full group-hover:bottom-0 p-4 cursor-pointer'>
                       <li className="py-2">
                         Add to Wish List <FaHeart className="inline-block" />
                       </li>
                       <li className="py-2">
                         Compare <IoGitCompare className="inline-block" />
                       </li>
-                      <li className="py-2">
+                      <li onClick={()=>handleCartProduct(item)} className="py-2">
                         Add to Cart <FaCartPlus className="inline-block" />
                       </li>
                     </ul>
