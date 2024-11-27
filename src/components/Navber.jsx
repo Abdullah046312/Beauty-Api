@@ -124,7 +124,7 @@ const Navber = () => {
               {/* Cart Dropdown */}
               <div ref={cartRef} className="relative cursor-pointer" onClick={() => setIsCart(!isCart)}>
                 {data.length > 0 &&
-                <div className="absolute left-[7px] top-[-15px] h-[20px] w-[20px] bg-yellow-500 rounded-full text-white font-bold text-center leading-[15px] ">
+                <div className="absolute left-[7px] top-[-15px] h-[20px] w-[20px] bg-[#F6C90E] rounded-full text-white font-bold text-center leading-[15px] ">
                   {data.length}
                 </div>
                   }

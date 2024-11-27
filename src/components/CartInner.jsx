@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Container from './Container';
 import { Link } from 'react-router-dom';
 import { IoIosArrowForward } from "react-icons/io";
@@ -7,11 +7,13 @@ import { ImCross } from "react-icons/im";
 
 import { useDispatch, useSelector } from 'react-redux';
 import { productDecrement, productIncrement, removeProduct } from '../slice/ProductSlice';
+import { ApiData } from './ContextApi';
 
 
 
 
 const CartInner = () => {
+  let { info, loading } = useContext(ApiData);
   let cartInfo = useSelector((state) => state.product.cartItem)
   let dispatch = useDispatch()
 
@@ -29,55 +31,22 @@ const CartInner = () => {
 
   }
 
+  let {totalPrice, totalQuantity} = cartInfo.reduce((acc, item)=>{
+    acc.totalPrice += item.price * item.qun
+    acc.totalQuantity += item.qun
+  
 
-  // const [cartItems, setCartItems] = useState([
-  //   {
-  //     id: 1,
-  //     name: "Apple Watch",
-  //     image: images24, // Replaced with images24.png
-  //     price: 599,
-  //     quantity: 1
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "iMac 27\"",
-  //     image: images24, // Replaced with images24.png
-  //     price: 2499,
-  //     quantity: 1
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "iPhone 12",
-  //     image: images24, // Replaced with images24.png
-  //     price: 999,
-  //     quantity: 1
-  //   }
-  // ]);
 
-  // // Increase quantity handler
-  // const handleIncreaseQuantity = (id) => {
-  //   setCartItems(prevItems =>
-  //     prevItems.map(item =>
-  //       item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-  //     )
-  //   );
-  // };
+  
+    return acc
+    
+  },{totalPrice:0, totalQuantity:0})
 
-  // // Decrease quantity handler
-  // const handleDecreaseQuantity = (id) => {
-  //   setCartItems(prevItems =>
-  //     prevItems.map(item =>
-  //       item.id === id && item.quantity > 1
-  //         ? { ...item, quantity: item.quantity - 1 }
-  //         : item
-  //     )
-  //   );
-  // };
 
-  // // Remove item handler
-  // const handleRemoveItem = (id) => {
-  //   setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  // };
+  
+  
+
+
 
   return (
     <section>
@@ -113,6 +82,10 @@ const CartInner = () => {
             </h4>
           </div>
         </div>
+
+        {cartInfo.length? (
+          <>
+
         {cartInfo.map((item, i) => (
 
 
@@ -152,6 +125,16 @@ const CartInner = () => {
 
           </div>
         ))}
+         </>
+       
+      ):(
+        <div className="text-center min-h-[100px]">
+            <h2 className="font-DMs font-semibold mt-5  text-[30px] text-[#262626]">
+            Your Cart is Currently Empty
+            </h2>
+          </div>
+      )},
+    
 
         <div className="flex items-center py-[20px] pl-5 border justify-between">
           <div className="flex items-center">
@@ -183,24 +166,37 @@ const CartInner = () => {
                 <td className="w-[220px] h-[50px] border px-3 font-sans font-bold text-[16px] text-[#262626]">
                   Subtotal
                 </td>
-                <td className="w-[220px] h-[50px] border px-3 font-sans font-normal text-[16px] text-[#767676]">
-                  389.99 $
+                <td className="w-[220px] h-[50px] border px-3 font-sans font-bold  text-[16px] text-[#767676]">
+                $ {totalPrice.toFixed(2)}
                 </td>
               </tr>
               <tr>
                 <td className="w-[220px] h-[50px] border px-3 font-sans font-bold text-[16px] text-[#262626]">
+                Quantity
+                </td>
+                <td className="w-[220px] h-[50px] border px-3 font-sans font-bold  text-[16px] text-[#767676]">
+                   {totalQuantity}
+                </td>
+              </tr>
+              <tr>
+                <td className="w-[220px] h-[50px] border px-3 font-sans font-bold text-[20px] text-[#262626]">
                   Total
                 </td>
-                <td className="w-[220px] h-[50px] border px-3 font-DMs font-bold text-[16px] text-[#262626]">
-                  389.99 $
+                <td className="w-[220px] h-[50px] border px-3 font-DMs font-bold text-[20px] text-[#262626]">
+                $ {totalPrice.toFixed(2)}
                 </td>
               </tr>
             </table>
           </div>
         </div>
+
+        <Link to="/checkout">
         <div className="flex justify-end">
           <button className='py-3 px-16 bg-black border-[2px] border-[#262626] text-white mt-10 text-[18px] font-bold font-DMs hover:bg-white hover:text-black ease-in-out duration-300'>Proceed to Checkout</button>
         </div>
+        
+        </Link>
+       
 
 
       </Container>

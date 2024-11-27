@@ -44,6 +44,11 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
       dispatch(addToCart({...item, qun:1}))
     }
 
+    let handlefilterProduct = (item) =>{
+      dispatch(addToCart ({...item, qun:1}))
+
+    }
+
 
 
 
@@ -70,7 +75,7 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
                         <li className="py-2">
                           Compare <IoGitCompare className="inline-block" />
                         </li>
-                        <li className="py-2">
+                        <li onClick={()=>handlefilterProduct(item)} className="py-2">
                           Add to Cart <FaCartPlus className="inline-block" />
                         </li>
                       </ul>
