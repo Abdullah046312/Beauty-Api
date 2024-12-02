@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Container from "./Container";
 import { HiMiniBars2 } from "react-icons/hi2";
 import { ImSearch } from "react-icons/im";
@@ -13,12 +13,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
 import { removeProduct } from "../slice/ProductSlice";
+import { ApiData } from "./ContextApi";
+
 
 
 const Navber = () => {
   let data = useSelector((state)=> state.product.cartItem)
   let dispatch = useDispatch()
-  
+  let [search, setSearch] = useState("")
+  let [searchFilter, setSearchFilter] = useState([])
+  let {loading, info} = useContext(ApiData)
   let navigate = useNavigate();
   const cateRef = useRef();
   const accRef = useRef();
@@ -50,6 +54,29 @@ const Navber = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  let handleChange = (e) =>{
+    setSearch(e.target.value);
+    if(e.target.value == ""){
+      setSearchFilter([])
+
+    }else{
+      
+      let searchOneByOne = info.filter((item)=>item.title.toLowerCase().includes(e.target.value.toLowerCase()))
+      setSearchFilter(searchOneByOne)
+    }
+    
+    
+
+  }
+
+  let handleSearchId = (id) =>{
+    navigate(`/shop/${id}`)
+    setSearchFilter([])
+    setSearch("")
+    
+
+  }
 
   const handleCheck = () => {
     toast("Welcome to Checkout Page!");
@@ -91,12 +118,40 @@ const Navber = () => {
           {/* Search Bar */}
           <div className="w-full md:w-1/2 mb-4 md:mb-0">
             <div className="relative">
-              <input
+              <input onChange={handleChange}
                 type="search"
-                className="py-3 pl-2 w-full md:w-[780px] md:h-[50px] rounded-[6px] outline-none text-[12px] sm:text-[14px] md:text-[14px font-DMs] text-[#C4C4C4]"
+                className="py-3 pl-2 w-full md:w-[780px] md:h-[50px] rounded-[6px] outline-none text-[12px] sm:text-[14px] md:text-[14px font-DMs] text-[#C4C4C4] outline-none"
                 placeholder="Search Products"
+                value={search}
               />
               <ImSearch className="absolute top-[50%] right-4 transform -translate-y-1/2" />
+              {searchFilter.length > 0 &&
+              <div className="absolute left-0 top-[80px]mt-2 w-full h-[400px] overflow-y-scroll bg-[rgba(233,230,230,0.9)] z-[1]">
+                  {searchFilter.map((item, i)=>(
+                  <div onClick={()=>handleSearchId(item.id)}>
+                  <div className="flex items-center bg-white py-4 px-5 cursor-pointer">
+                    <div>
+                      <img
+                        className="w-[80px] md:w-[150px]"
+                        src={item.thumbnail}
+                        alt="Cart item"
+                      />
+                    </div>
+                    <div className="flex-grow">
+                      <div className="font-DM font-bold text-[14px] ml-3">
+                        <h3>{item.title}</h3>
+                      </div>
+                    
+                    </div>
+                    
+                  </div>
+                  
+                  </div>
+                  ))}
+                
+                </div>
+}
+          
             </div>
           </div>
 
