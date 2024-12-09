@@ -138,7 +138,7 @@ const ShopFirstInner = ({ allPage, activeGrid, categoryFilter, priceShow }) => {
                         Compare <IoGitCompare className="inline-block" />
                       </li>
                       <li onClick={()=>handleCartProduct(item)} className="py-2">
-                        Add to Cart <FaCartPlus className="inline-block" />
+                       <Link to="/loginpage"> Add to Cart <FaCartPlus className="inline-block" /></Link>
                       </li>
                     </ul>
                   </div>

@@ -14,6 +14,8 @@ import Error from "./pages/Error";
 import MyAccount from "./pages/MyAccount";
 import Checkout from "./pages/Checkout";
 import Cart from "./pages/Cart";
+import LoginPage from "./pages/LoginPage";
+import Registration from "./pages/Registration";
 
 
 let router = createBrowserRouter(createRoutesFromElements(
@@ -27,6 +29,9 @@ let router = createBrowserRouter(createRoutesFromElements(
     <Route path="/signup" element={<SignUp/>}></Route>
     <Route path="/myaccount" element={<MyAccount/>}></Route>
     <Route path="/checkout" element={<Checkout/>}></Route>
+   
+    <Route path="/loginpage" element={<LoginPage/>}></Route>
+    <Route path="/registration" element={<Registration/>}></Route>
     <Route path="/cart" element={<Cart/>}></Route>
     <Route path="*" element={<Error/>}></Route>
     
